@@ -14,10 +14,16 @@ CUDA_VER?=
 ifeq ($(CUDA_VER),)
   $(error "CUDA_VER is not set")
 endif
+
+DS_SRC_PATH?=
+ifeq ($(DS_SRC_PATH),)
+  $(error "DS_SRC_PATH is not set")
+endif
+
 CC:= g++
 
-# Change to your deepstream 4.0 SDK includes
-CFLAGS+= -I/Your_deepstream_SDK_v4.0_xxxxx_path/sources/includes \
+# Change to your deepstream SDK includes
+CFLAGS+= -I$(DS_SRC_PATH)/sources/includes \
 	  -I/usr/local/cuda-$(CUDA_VER)/include
 
 CFLAGS+= -Wall -std=c++11 -shared -fPIC

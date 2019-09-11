@@ -9,7 +9,7 @@
 #
 ################################################################################
 
-APP:= deepstream-custom-uff
+APP:= deepstream-custom
 
 TARGET_DEVICE = $(shell gcc -dumpmachine | cut -f1 -d -)
 
@@ -17,12 +17,17 @@ NVDS_VERSION:=4.0
 
 LIB_INSTALL_DIR?=/opt/nvidia/deepstream/deepstream-$(NVDS_VERSION)/lib/
 
+DS_SRC_PATH?=
+ifeq ($(DS_SRC_PATH),)
+  $(error "DS_SRC_PATH is not set")
+endif
+
 ifeq ($(TARGET_DEVICE),aarch64)
   CFLAGS:= -DPLATFORM_TEGRA
 endif
 
-# Change to your deepstream 4.0 SDK includes
-CFLAGS+= -I/Your_deepstream_SDK_v4.0_xxxxx_path/sources/includes
+# Change to your deepstream SDK includes
+CFLAGS+= -I$(DS_SRC_PATH)/sources/includes
 
 SRCS:= $(wildcard *.c)
 

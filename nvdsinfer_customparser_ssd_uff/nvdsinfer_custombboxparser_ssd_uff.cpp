@@ -62,8 +62,8 @@ bool NvDsInferParseCustomSSDUff (std::vector<NvDsInferLayerInfo> const &outputLa
     const float threshold = detectionParams.perClassThreshold[0];
 
     // Set your keep_count / keep_top here
-    const int keep_count = 100;
-    const int keep_top_k = 100;
+    const int keep_count = 200;
+    const int keep_top_k = 200;
 
     float* det;
 

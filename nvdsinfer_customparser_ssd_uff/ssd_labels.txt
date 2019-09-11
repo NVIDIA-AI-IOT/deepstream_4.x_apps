@@ -1,3 +1,4 @@
+bicycle
 car
-cyclist
-pedestrian
+person
+road_sign

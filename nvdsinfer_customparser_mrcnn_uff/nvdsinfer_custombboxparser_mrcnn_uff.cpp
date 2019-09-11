@@ -149,7 +149,7 @@ bool NvDsInferParseCustomMrcnnUff (std::vector<NvDsInferLayerInfo> const &output
     float* out_mask = (float *) outputLayersInfo[maskIndex].buffer;
 
     std::vector<MRCNNBBoxInfo> binfo = decodeOutput(out_det, out_mask);
-    for (int roi_id = 0; roi_id < binfo.size(); roi_id++) {
+    for (unsigned int roi_id = 0; roi_id < binfo.size(); roi_id++) {
         NvDsInferObjectDetectionInfo object;
         object.classId = binfo[roi_id].label;
         object.detectionConfidence = binfo[roi_id].prob;
