@@ -1,0 +1,29 @@
+################################################################################
+# Copyright (c) 2018-2019, NVIDIA CORPORATION.  All rights reserved.
+#
+# NVIDIA Corporation and its licensors retain all intellectual property
+# and proprietary rights in and to this software, related documentation
+# and any modifications thereto.  Any use, reproduction, disclosure or
+# distribution of this software and related documentation without an express
+# license agreement from NVIDIA Corporation is strictly prohibited.
+#
+################################################################################
+
+Refer to the DeepStream SDK documentation for a description of the library.
+
+--------------------------------------------------------------------------------
+Pre-requisites:
+- TensorRT 5.1
+
+--------------------------------------------------------------------------------
+Compile the library using:
+  make
+
+--------------------------------------------------------------------------------
+This source has been written to parse the output layers of the ssd uff detector.
+To use this library for bounding box output parsing instead of the inbuilt parsing
+function, modify the following parameters in [property] section of primary infer
+configuration file:
+
+parse-bbox-func-name=NvDsInferParseCustomSSDUff
+custom-lib-path=/path/to/this/directory/libnvds_infercustomparser_ssd_uff.so

@@ -1,0 +1,5 @@
+Automobile
+Bicycle
+Person
+Roadsign
+background
