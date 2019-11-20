@@ -309,7 +309,7 @@ bool NvDsInferParseCustomFrcnnUff (std::vector<NvDsInferLayerInfo> const &output
 
     /* Warn in case of mismatch in number of classes */
     if (!classMismatchWarn) {
-        if (covLayerDims.c != detectionParams.numClassesConfigured) {
+        if (covLayerDims.h != detectionParams.numClassesConfigured) {
             std::cerr << "WARNING: Num classes mismatch. Configured:" <<
                       detectionParams.numClassesConfigured << ", detected by network: " <<
                       covLayerDims.c << " " << covLayerDims.h << " " << covLayerDims.w << std::endl;
