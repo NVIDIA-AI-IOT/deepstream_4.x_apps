@@ -55,14 +55,14 @@ std::vector<int> nms_classifier(std::vector<float>& boxes_per_cls,
             std::swap(x1max, x2max);
         }
 
-        return x1max < x2min ? 0 : std::min(x1max, x2max) - x2min;
+        return x1max < x2min ? 0.0f : (std::min(x1max, x2max) - x2min + 1.0f);
     };
 
     auto computeIoU = [&overlap1D](float* bbox1, float* bbox2) -> float {
         float overlapX = overlap1D(bbox1[0], bbox1[2], bbox2[0], bbox2[2]);
         float overlapY = overlap1D(bbox1[1], bbox1[3], bbox2[1], bbox2[3]);
-        float area1 = (bbox1[2] - bbox1[0]) * (bbox1[3] - bbox1[1]);
-        float area2 = (bbox2[2] - bbox2[0]) * (bbox2[3] - bbox2[1]);
+        float area1 = (bbox1[2] - bbox1[0] + 1.0f) * (bbox1[3] - bbox1[1] + 1.0f);
+        float area2 = (bbox2[2] - bbox2[0] + 1.0f) * (bbox2[3] - bbox2[1] + 1.0f);
         float overlap2D = overlapX * overlapY;
         float u = area1 + area2 - overlap2D;
         return u == 0 ? 0 : overlap2D / u;
@@ -142,20 +142,20 @@ void batch_inverse_transform_classifier(
                      / gParams.classifierRegressorStd[2];
             th = classifier_regr[n * roi_num_per_img * gParams.outputBboxSize + i * gParams.outputBboxSize + max_idx * 4 + 3]
                      / gParams.classifierRegressorStd[3];
-            float y = roi_after_nms[n * roi_num_per_img * 4 + 4 * i] * static_cast<float>(gParams.inputHeight);
-            float x = roi_after_nms[n * roi_num_per_img * 4 + 4 * i + 1] * static_cast<float>(gParams.inputWidth);
-            float ymax = roi_after_nms[n * roi_num_per_img * 4 + 4 * i + 2] * static_cast<float>(gParams.inputHeight);
-            float xmax = roi_after_nms[n * roi_num_per_img * 4 + 4 * i + 3] * static_cast<float>(gParams.inputWidth);
+            float y = roi_after_nms[n * roi_num_per_img * 4 + 4 * i] * static_cast<float>(gParams.inputHeight - 1.0f);
+            float x = roi_after_nms[n * roi_num_per_img * 4 + 4 * i + 1] * static_cast<float>(gParams.inputWidth - 1.0f);
+            float ymax = roi_after_nms[n * roi_num_per_img * 4 + 4 * i + 2] * static_cast<float>(gParams.inputHeight - 1.0f);
+            float xmax = roi_after_nms[n * roi_num_per_img * 4 + 4 * i + 3] * static_cast<float>(gParams.inputWidth - 1.0f);
             float w = xmax - x;
             float h = ymax - y;
             float cx = x + w / 2.0f;
             float cy = y + h / 2.0f;
             float cx1 = tx * w + cx;
             float cy1 = ty * h + cy;
-            float w1 = std::round(std::exp(static_cast<double>(tw)) * w * 0.5f) * 2.0f;
-            float h1 = std::round(std::exp(static_cast<double>(th)) * h * 0.5f) * 2.0f;
-            float x1 = std::round((cx1 - w1 / 2.0f) * 0.5f) * 2.0f;
-            float y1 = std::round((cy1 - h1 / 2.0f) * 0.5f) * 2.0f;
+            float w1 = std::exp(static_cast<double>(tw)) * w;
+            float h1 = std::exp(static_cast<double>(th)) * h;
+            float x1 = cx1 - w1 / 2.0f;
+            float y1 = cy1 - h1 / 2.0f;
             auto clip
                 = [](float in, float low, float high) -> float { return (in < low) ? low : (in > high ? high : in); };
             float x2 = x1 + w1;
